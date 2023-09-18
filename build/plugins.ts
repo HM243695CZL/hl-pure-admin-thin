@@ -10,6 +10,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 import removeConsole from "vite-plugin-remove-console";
 import themePreprocessorPlugin from "@pureadmin/theme";
 import { genScssMultipleScopeVars } from "../src/layout/theme";
+import { VxeTableResolve, createStyleImportPlugin } from 'vite-plugin-style-import';
 
 export function getPluginsList(
   command: string,
@@ -27,6 +28,12 @@ export function getPluginsList(
     // 线上环境删除console
     removeConsole({ external: ["src/assets/iconfont/iconfont.js"] }),
     viteBuildInfo(),
+    // 按需引入vxe-table
+    createStyleImportPlugin({
+      resolves: [
+        VxeTableResolve()
+      ]
+    }),
     // 自定义主题
     themePreprocessorPlugin({
       scss: {

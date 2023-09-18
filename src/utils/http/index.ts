@@ -13,11 +13,32 @@ import { stringify } from "qs";
 import NProgress from "../progress";
 import { getToken, formatToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
+import {ElLoading} from 'element-plus';
+
+let loadingReqCount = 0;
+let loadingInstance: any;
+const showLoading = () => {
+  if (loadingReqCount === 0) {
+    loadingInstance = ElLoading.service({
+      target: '#app'
+    })
+  }
+  loadingReqCount += 1;
+}
+
+const hideLoading = () => {
+  if (loadingReqCount <= 0) return;
+  loadingReqCount -= 1;
+  if (loadingReqCount === 0) {
+    loadingInstance.close();
+  }
+}
+
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
   // 请求超时时间
-  timeout: 10000,
+  timeout: 60000,
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
     Accept: "application/json, text/plain, */*",
@@ -62,6 +83,7 @@ class PureHttp {
   private httpInterceptorsRequest(): void {
     PureHttp.axiosInstance.interceptors.request.use(
       async (config: PureHttpRequestConfig): Promise<any> => {
+        showLoading();
         // 开启进度条动画
         NProgress.start();
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
@@ -122,6 +144,7 @@ class PureHttp {
     instance.interceptors.response.use(
       (response: PureHttpResponse) => {
         const $config = response.config;
+        hideLoading();
         // 关闭进度条动画
         NProgress.done();
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
@@ -150,16 +173,15 @@ class PureHttp {
   public request<T>(
     method: RequestMethods,
     url: string,
-    param?: AxiosRequestConfig,
+    data?: AxiosRequestConfig,
     axiosConfig?: PureHttpRequestConfig
   ): Promise<T> {
     const config = {
       method,
       url,
-      ...param,
+      data,
       ...axiosConfig
     } as PureHttpRequestConfig;
-
     // 单独处理自定义请求/响应回调
     return new Promise((resolve, reject) => {
       PureHttp.axiosInstance

@@ -159,3 +159,13 @@ declare global {
     $config: ServerConfigs;
   }
 }
+
+/**
+ * 全局配置
+ */
+declare type ConfigMapType = {
+  title: string;
+  createPath: string;
+  updatePath: string;
+  viewPath: string;
+}
