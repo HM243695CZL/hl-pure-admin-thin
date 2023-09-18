@@ -80,7 +80,7 @@ const transitionMain = defineComponent({
   >
     <router-view>
       <template #default="{ Component, route }">
-        <el-scrollbar v-if="props.fixedHeader">
+        <el-scrollbar v-if="props.fixedHeader" style="padding: 10px;">
           <el-backtop title="回到顶部" target=".app-main .el-scrollbar__wrap">
             <backTop />
           </el-backtop>
@@ -92,14 +92,12 @@ const transitionMain = defineComponent({
               <component
                 :is="Component"
                 :key="route.fullPath"
-                class="main-content"
               />
             </keep-alive>
             <component
               v-else
               :is="Component"
               :key="route.fullPath"
-              class="main-content"
             />
           </transitionMain>
         </el-scrollbar>
@@ -140,9 +138,5 @@ const transitionMain = defineComponent({
   position: relative;
   width: 100%;
   min-height: 100vh;
-}
-
-.main-content {
-  margin: 24px;
 }
 </style>

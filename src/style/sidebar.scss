@@ -45,7 +45,10 @@
 
     .el-scrollbar__wrap {
       height: 100%;
-      overflow: auto;
+      background: #fff;
+      .el-scrollbar__view{
+        height: 100%;
+      }
     }
   }
 
