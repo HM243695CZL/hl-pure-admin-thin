@@ -33,7 +33,14 @@ export const useUserStore = defineStore({
         getLogin(data)
           .then(data => {
             if (data) {
-              setToken(data.data);
+              const result = {
+                accessToken: data.data.token,
+                refreshToken: data.data.token,
+                expires: '2023/10/30 00:00:00',
+                roles: data.data.userInfo.roles,
+                username: data.data.userInfo.username
+              }
+              setToken(result);
               resolve(data);
             }
           })

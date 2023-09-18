@@ -17,6 +17,7 @@ import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
 import Lock from "@iconify-icons/ri/lock-fill";
 import User from "@iconify-icons/ri/user-3-fill";
+import {storageSession} from '@pureadmin/utils';
 
 defineOptions({
   name: "Login"
@@ -43,9 +44,10 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: "admin123" })
+        .loginByUsername({ username: ruleForm.username, password: "123456" })
         .then(res => {
-          if (res.success) {
+          if (res.status === 200) {
+            storageSession().setItem('menu-list', res.data.menuList);
             // 获取后端路由
             initRouter().then(() => {
               router.push(getTopMenu(true).path);

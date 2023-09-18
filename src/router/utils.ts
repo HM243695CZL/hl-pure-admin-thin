@@ -88,10 +88,13 @@ function filterNoPermissionTree(data: RouteComponent[]) {
   const newTree = cloneDeep(data).filter((v: any) =>
     isOneOfArray(v.meta?.roles, currentRoles)
   );
-  newTree.forEach(
-    (v: any) => v.children && (v.children = filterNoPermissionTree(v.children))
-  );
-  return filterChildrenTree(newTree);
+  newTree.forEach((v: any) => {
+    if (v.children && v.children.length) {
+      v.children = filterNoPermissionTree(v.children);
+    }
+  });
+  return newTree;
+  // return filterChildrenTree(newTree);
 }
 
 /** 通过指定 `key` 获取父级路径集合，默认 `key` 为 `path` */
@@ -186,7 +189,7 @@ function initRouter() {
   if (getConfig()?.CachingAsyncRoutes) {
     // 开启动态路由缓存本地sessionStorage
     const key = "async-routes";
-    const asyncRouteList = storageSession().getItem(key) as any;
+    const asyncRouteList = storageSession().getItem('menu-list') as any;
     if (asyncRouteList && asyncRouteList?.length > 0) {
       return new Promise(resolve => {
         handleAsyncRoutes(asyncRouteList);
