@@ -90,11 +90,15 @@ const clickEditPass = (id: string) => {
         </template>
       </vxe-column>
       <vxe-column field="addTime" title="添加时间" />
-      <vxe-column title="操作">
+      <vxe-column width="220" title="操作">
         <template #default="scope">
           <el-button size="small" @click="clickEditPass(scope.row.id)">修改密码</el-button>
           <el-button size="small" @click="clickEdit(scope.row.id)">编辑</el-button>
-          <el-button size="small" type="danger" @click="clickDelete(scope.row.id)">删除</el-button>
+          <el-popconfirm width="200" title="确定删除该数据吗?" @confirm="clickDelete(scope.row.id)">
+            <template #reference>
+              <el-button size="small" type="danger">删除</el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </vxe-column>
     </vxe-table>

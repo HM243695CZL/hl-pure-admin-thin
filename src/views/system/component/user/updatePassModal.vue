@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import {nextTick, reactive, ref} from 'vue';
+import {postAction} from '@/api/common';
+import {StatusEnum} from '@/common/status.enum';
+import {ElMessage} from 'element-plus';
+import {updatePassApi} from '@/api/system/user';
 
 const formRef = ref();
 const state = reactive({
@@ -26,7 +30,16 @@ const openDialog = (id: string) => {
   });
 };
 const clickConfirm = () => {
-
+  formRef.value.validate((valid: boolean) => {
+    if (valid) {
+      postAction(updatePassApi, state.ruleForm).then(res => {
+        if (res.status === StatusEnum.SUCCESS) {
+          ElMessage.success(res.message);
+          closeDialog();
+        }
+      })
+    };
+  })
 };
 defineExpose({
   openDialog
