@@ -13,7 +13,8 @@ import {
   VxeModal,
   Table,
   Filter,
-  Tooltip
+  Tooltip,
+  Icon
 } from 'vxe-table';
 import 'vxe-table/styles/cssvar.scss';
 
@@ -37,7 +38,7 @@ const app = createApp(App);
 import * as directives from "@/directives";
 
 function useTable(app) {
-  app.use(Table).use(Column).use(Filter).use(VxeModal).use(Tooltip);
+  app.use(Table).use(Icon).use(Column).use(Filter).use(VxeModal).use(Tooltip);
 }
 VXETable.setup({
   table: {

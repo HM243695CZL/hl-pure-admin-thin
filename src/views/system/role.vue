@@ -78,7 +78,7 @@ const {
     <CPagination :page-info="pageInfo" @change-page-index="changePageIndex" @change-page-size="changePageSize" />
     <CModal
       ref="modalFormRef"
-      modal-id="userModalId"
+      modal-id="roleModalId"
       :title="state.configMap.title"
       :create-path="state.configMap.createPath"
       :update-path="state.configMap.updatePath"

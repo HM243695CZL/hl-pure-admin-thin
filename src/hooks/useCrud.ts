@@ -14,6 +14,11 @@ interface ICrudParams {
   parentRef?: any, // 父级ref
 }
 
+type ActionMapType = {
+  post: Function,
+  get: Function
+}
+
 export default function ({
                            uris,
                            parentRef
@@ -38,7 +43,12 @@ export default function ({
       ElMessage.error('请设置uris.page属性！');
       return false;
     }
-    postAction(uris.page, {
+    let actionMap: ActionMapType = {
+      post: (url: string, data: any) => postAction(url, data),
+      get: (url: string, data: any) => getAction(url, data)
+    }
+    const reqMethod = uris.pageMethod ? uris.pageMethod : 'post';
+    actionMap[reqMethod](uris.page, {
       ...state.pageInfo,
       ...state.searchParams
     }).then(res => {
@@ -46,7 +56,7 @@ export default function ({
         if (parentRef) {
           state.tableHeight = parentRef.value.getBoundingClientRect().height;
         }
-        state.dataList = res.data.list;
+        state.dataList = reqMethod === 'post' ? res.data.list : res.data;
         state.pageInfo.totalRecords = res.data.total;
       }
     })
