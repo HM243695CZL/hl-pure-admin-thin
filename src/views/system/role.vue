@@ -70,7 +70,7 @@ const {
       <vxe-column field="desc"  title="描述" />
       <vxe-column title="操作">
         <template #default="scope">
-          <el-button size="small" type="primary" @click="clickEdit(scope.row.id)">编辑</el-button>
+          <el-button size="small" @click="clickEdit(scope.row.id)">编辑</el-button>
           <el-button size="small" type="danger" @click="clickDelete(scope.row.id)">删除</el-button>
         </template>
       </vxe-column>

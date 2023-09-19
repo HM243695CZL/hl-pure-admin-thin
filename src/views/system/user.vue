@@ -4,6 +4,7 @@ import CTop from '@/components/CTop/index.vue';
 import CModal from '@/components/CModal/index.vue';
 import CPagination from '@/components/CPagination/index.vue';
 import UserModal from '@/views/system/component/user/userModal.vue';
+import UpdatePassModal from '@/views/system/component/user/updatePassModal.vue';
 import {createUserApi, deleteUserApi, getUserPageApi, updateUserApi, viewUserApi} from '@/api/system/user';
 import useCrud from '@/hooks/useCrud';
 import {ConfigMapType} from '../../../types/global';
@@ -13,6 +14,7 @@ defineOptions({
 })
 
 const userRef = ref();
+const updatePassRef = ref();
 const state = reactive({
   uris: {
     page: getUserPageApi,
@@ -48,7 +50,9 @@ const {
   uris: state.uris,
   parentRef: userRef
 });
-
+const clickEditPass = (id: string) => {
+  updatePassRef.value.openDialog(id);
+}
 </script>
 
 <template>
@@ -88,7 +92,8 @@ const {
       <vxe-column field="addTime" title="添加时间" />
       <vxe-column title="操作">
         <template #default="scope">
-          <el-button size="small" type="primary" @click="clickEdit(scope.row.id)">编辑</el-button>
+          <el-button size="small" @click="clickEditPass(scope.row.id)">修改密码</el-button>
+          <el-button size="small" @click="clickEdit(scope.row.id)">编辑</el-button>
           <el-button size="small" type="danger" @click="clickDelete(scope.row.id)">删除</el-button>
         </template>
       </vxe-column>
@@ -105,6 +110,9 @@ const {
     >
       <UserModal ref="childRef" />
     </CModal>
+    <UpdatePassModal
+      ref="updatePassRef"
+    />
   </div>
 </template>
 
