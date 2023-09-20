@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {nextTick, reactive, ref} from 'vue';
-import {authRoleApi, getUserAuthApi} from '@/api/system/user';
+import {authUserRoleApi, getUserAuthApi} from '@/api/system/user';
 import {getAction, postAction} from '@/api/common';
 import {StatusEnum} from '@/common/status.enum';
 import {ElMessage} from 'element-plus';
@@ -34,7 +34,7 @@ const closeDialog = () => {
 const openDialog = (id: string) => {
   state.isShowDialog = true;
   nextTick(() => {
-    getAction(getUserAuthApi + '/' + id, '').then(res => {
+    getAction(`${getUserAuthApi}/${id}`, '').then(res => {
       if (res.status === StatusEnum.SUCCESS) {
         formRef.value.resetFields();
         state.ruleForm.id = id;
@@ -46,7 +46,7 @@ const openDialog = (id: string) => {
 const clickConfirm = () => {
   formRef.value.validate((valid: boolean) => {
     if (valid) {
-      postAction(authRoleApi, state.ruleForm).then(res => {
+      postAction(authUserRoleApi, state.ruleForm).then(res => {
         if (res.status === StatusEnum.SUCCESS) {
           ElMessage.success(res.message);
           closeDialog();

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {reactive, ref} from 'vue';
+import {onMounted, reactive, ref} from 'vue';
 import {createRoleApi, deleteRoleApi, getRolePageApi, updateRoleApi, viewRoleApi} from '@/api/system/role';
 import useCrud from '@/hooks/useCrud';
 import CTop from '@/components/CTop/index.vue';
@@ -8,12 +8,17 @@ import {ConfigMapType} from '../../../types/global';
 import CPagination from '@/components/CPagination/index.vue';
 import CModal from '@/components/CModal/index.vue';
 import RoleModal from '@/views/system/component/role/roleModal.vue';
+import AuthMenu from '@/views/system/component/role/authMenu.vue';
+import {getAction} from '@/api/common';
+import {getMenuPageApi} from '@/api/system/menu';
+import {StatusEnum} from '@/common/status.enum';
 
 defineOptions({
   name: 'systemRole'
 })
 
 const roleRef = ref();
+const authMenu = ref();
 const state = reactive({
   uris: {
     page: getRolePageApi,
@@ -25,6 +30,7 @@ const state = reactive({
     updatePath: updateRoleApi,
     viewPath: viewRoleApi
   } as ConfigMapType,
+  menuList: []
 });
 const {
   dataList,
@@ -45,6 +51,19 @@ const {
   uris: state.uris,
   parentRef: roleRef
 });
+const clickAuth = (id: string) => {
+  authMenu.value.openDialog(id);
+};
+const getMenuList = () => {
+  getAction(getMenuPageApi, '').then(res => {
+    if (res.status === StatusEnum.SUCCESS) {
+      state.menuList = res.data;
+    }
+  })
+};
+onMounted(() => {
+  getMenuList();
+})
 </script>
 
 <template>
@@ -70,6 +89,7 @@ const {
       <vxe-column field="desc"  title="描述" />
       <vxe-column title="操作">
         <template #default="scope">
+          <el-button size="small" @click="clickAuth(scope.row.id)">授权</el-button>
           <el-button size="small" @click="clickEdit(scope.row.id)">编辑</el-button>
           <el-popconfirm width="200" title="确定删除该数据吗?" @confirm="clickDelete(scope.row.id)">
             <template #reference>
@@ -91,6 +111,10 @@ const {
     >
       <RoleModal ref="childRef" />
     </CModal>
+    <AuthMenu
+      ref="authMenu"
+      :menu-list="state.menuList"
+    />
   </div>
 </template>
 

@@ -9,7 +9,7 @@ import DivideRole from '@/views/system/component/user/divideRole.vue';
 import {createUserApi, deleteUserApi, getUserPageApi, updateUserApi, viewUserApi} from '@/api/system/user';
 import useCrud from '@/hooks/useCrud';
 import {ConfigMapType} from '../../../types/global';
-import {getRoleListApi} from '@/api/system/role';
+import {getAllRoleListApi} from '@/api/system/role';
 import {getAction} from '@/api/common';
 import {StatusEnum} from '@/common/status.enum';
 
@@ -63,7 +63,7 @@ const clickDivideRole = (id: string) => {
   divideRoleRef.value.openDialog(id);
 };
 const getRoleList = () => {
-  getAction(getRoleListApi, '').then(res => {
+  getAction(getAllRoleListApi, '').then(res => {
     if (res.status === StatusEnum.SUCCESS) {
       state.roleList = res.data;
     }
