@@ -6,3 +6,5 @@ export const updateUserApi = `${userBaseApi}update`;
 export const viewUserApi = `${userBaseApi}view`;
 export const deleteUserApi = `${userBaseApi}delete`;
 export const updatePassApi = `${userBaseApi}updatePass`;
+export const getUserAuthApi = `${userBaseApi}getUserAuth`;
+export const authRoleApi = `${userBaseApi}authRole`;

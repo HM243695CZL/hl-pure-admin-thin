@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import {reactive, ref} from 'vue';
+import {onMounted, reactive, ref} from 'vue';
 import CTop from '@/components/CTop/index.vue';
 import CModal from '@/components/CModal/index.vue';
 import CPagination from '@/components/CPagination/index.vue';
 import UserModal from '@/views/system/component/user/userModal.vue';
 import UpdatePassModal from '@/views/system/component/user/updatePassModal.vue';
+import DivideRole from '@/views/system/component/user/divideRole.vue';
 import {createUserApi, deleteUserApi, getUserPageApi, updateUserApi, viewUserApi} from '@/api/system/user';
 import useCrud from '@/hooks/useCrud';
 import {ConfigMapType} from '../../../types/global';
+import {getRoleListApi} from '@/api/system/role';
+import {getAction} from '@/api/common';
+import {StatusEnum} from '@/common/status.enum';
 
 defineOptions({
   name: 'systemUser'
@@ -15,6 +19,7 @@ defineOptions({
 
 const userRef = ref();
 const updatePassRef = ref();
+const divideRoleRef = ref();
 const state = reactive({
   uris: {
     page: getUserPageApi,
@@ -29,7 +34,8 @@ const state = reactive({
   sexMap: {
     1: '男',
     2: '女'
-  }
+  },
+  roleList: []
 });
 const {
   dataList,
@@ -52,7 +58,20 @@ const {
 });
 const clickEditPass = (id: string) => {
   updatePassRef.value.openDialog(id);
-}
+};
+const clickDivideRole = (id: string) => {
+  divideRoleRef.value.openDialog(id);
+};
+const getRoleList = () => {
+  getAction(getRoleListApi, '').then(res => {
+    if (res.status === StatusEnum.SUCCESS) {
+      state.roleList = res.data;
+    }
+  })
+};
+onMounted(() => {
+  getRoleList();
+});
 </script>
 
 <template>
@@ -90,8 +109,9 @@ const clickEditPass = (id: string) => {
         </template>
       </vxe-column>
       <vxe-column field="addTime" title="添加时间" />
-      <vxe-column width="220" title="操作">
+      <vxe-column width="300" title="操作">
         <template #default="scope">
+          <el-button size="small" @click="clickDivideRole(scope.row.id)">分配角色</el-button>
           <el-button size="small" @click="clickEditPass(scope.row.id)">修改密码</el-button>
           <el-button size="small" @click="clickEdit(scope.row.id)">编辑</el-button>
           <el-popconfirm width="200" title="确定删除该数据吗?" @confirm="clickDelete(scope.row.id)">
@@ -116,6 +136,11 @@ const clickEditPass = (id: string) => {
     </CModal>
     <UpdatePassModal
       ref="updatePassRef"
+    />
+    <DivideRole
+      ref="divideRoleRef"
+      :role-list="state.roleList"
+      @refreshList="getDataList"
     />
   </div>
 </template>

@@ -1,21 +1,30 @@
 <script setup lang="ts">
 import {nextTick, reactive, ref} from 'vue';
-import {postAction} from '@/api/common';
+import {authRoleApi, getUserAuthApi} from '@/api/system/user';
+import {getAction, postAction} from '@/api/common';
 import {StatusEnum} from '@/common/status.enum';
 import {ElMessage} from 'element-plus';
-import {updatePassApi} from '@/api/system/user';
 
+const emits = defineEmits([
+  'refreshList'
+]);
+const props = defineProps({
+  roleList: {
+    type: Array,
+    required: true
+  }
+});
 const formRef = ref();
 const state = reactive({
   isShowDialog: false,
-  title: '修改密码',
+  title: '分配角色',
   ruleForm: {
     id: '',
-    password: '',
+    roles: []
   },
   rules: {
-    password: [
-      { required: true, message: '密码不能为空', trigger: 'blur' }
+    roles: [
+      { required: true, message: '角色不能为空', trigger: 'blur' }
     ],
   }
 });
@@ -24,18 +33,24 @@ const closeDialog = () => {
 };
 const openDialog = (id: string) => {
   state.isShowDialog = true;
-  state.ruleForm.id = id;
   nextTick(() => {
-    formRef.value.resetFields();
+    getAction(getUserAuthApi + '/' + id, '').then(res => {
+      if (res.status === StatusEnum.SUCCESS) {
+        formRef.value.resetFields();
+        state.ruleForm.id = id;
+        state.ruleForm.roles = res.data;
+      }
+    })
   });
 };
 const clickConfirm = () => {
   formRef.value.validate((valid: boolean) => {
     if (valid) {
-      postAction(updatePassApi, state.ruleForm).then(res => {
+      postAction(authRoleApi, state.ruleForm).then(res => {
         if (res.status === StatusEnum.SUCCESS) {
           ElMessage.success(res.message);
           closeDialog();
+          emits('refreshList');
         }
       })
     }
@@ -47,10 +62,17 @@ defineExpose({
 </script>
 
 <template>
-  <vxe-modal id="passModal" v-model="state.isShowDialog" :title="state.title">
+  <vxe-modal id="divideRoleId" width="800" :title="state.title" v-model="state.isShowDialog">
     <el-form ref='formRef' :rules='state.rules' :model='state.ruleForm' label-width='100px'>
-      <el-form-item label="密码" prop="password">
-        <el-input show-password type="text" v-model="state.ruleForm.password" placeholder="请输入密码"></el-input>
+      <el-form-item label="角色" prop="roles">
+        <el-select class="w100" v-model="state.ruleForm.roles" multiple placeholder="请选择角色">
+          <el-option
+            v-for="item in roleList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
     </el-form>
     <template #footer>
