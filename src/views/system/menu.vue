@@ -43,7 +43,7 @@ const {
   <div class="menu-container h100">
     <CTop
       @click-add="clickAdd"
-      :button-auth="['add']"
+      :button-auth="['addBtn']"
     />
     <vxe-table
       border="inner"
