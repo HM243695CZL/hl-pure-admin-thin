@@ -13,7 +13,7 @@ import { stringify } from "qs";
 import NProgress from "../progress";
 import { getToken, formatToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
-import {ElLoading} from 'element-plus';
+import {ElLoading, ElMessage} from 'element-plus';
 
 let loadingReqCount = 0;
 let loadingInstance: any;
@@ -147,6 +147,11 @@ class PureHttp {
         hideLoading();
         // 关闭进度条动画
         NProgress.done();
+        const res = response.data;
+        if (res.status && res.status !== 200) {
+          ElMessage.error(res.message);
+          return Promise.reject(response);
+        }
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
         if (typeof $config.beforeResponseCallback === "function") {
           $config.beforeResponseCallback(response);
