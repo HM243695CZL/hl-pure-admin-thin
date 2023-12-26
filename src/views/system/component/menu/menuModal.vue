@@ -15,8 +15,8 @@ const state = reactive({
     path: '',
     name: '',
     icon: '',
-    rank: '',
-    showLink: '',
+    sort: '',
+    isHide: '',
     isKeepAlive: '',
     isAffix: ''
   },
@@ -75,15 +75,15 @@ defineExpose({
         </el-form-item>
       </el-col>
       <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-        <el-form-item label="菜单排序" prop='rank'>
-          <el-input v-model="state.ruleForm.rank" placeholder="请输入排序" class="w100" />
+        <el-form-item label="菜单排序" prop='sort'>
+          <el-input v-model="state.ruleForm.sort" placeholder="请输入排序" class="w100" />
         </el-form-item>
       </el-col>
       <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-        <el-form-item label="是否显示" prop='showLink'>
-          <el-radio-group v-model="state.ruleForm.showLink">
-            <el-radio :label="true">显示</el-radio>
-            <el-radio :label="false">隐藏</el-radio>
+        <el-form-item label="是否显示" prop='isHide'>
+          <el-radio-group v-model="state.ruleForm.isHide">
+            <el-radio :label="true">隐藏</el-radio>
+            <el-radio :label="false">显示</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-col>

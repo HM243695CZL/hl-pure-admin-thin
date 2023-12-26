@@ -47,7 +47,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
         .loginByUsername({ username: ruleForm.username, password: ruleForm.password })
         .then(res => {
           if (res.status === 200) {
-            storageSession().setItem('menu-list', res.data.menuList);
+            storageSession().setItem('menu-list', menuTran(res.data.menuList));
             // 获取后端路由
             initRouter().then(() => {
               router.push(getTopMenu(true).path);
@@ -61,6 +61,17 @@ const onLogin = async (formEl: FormInstance | undefined) => {
     }
   });
 };
+
+const menuTran = menuList => {
+  menuList.map(item => {
+    if (item.children && item.children.length > 0) {
+      menuTran(item.children);
+    }
+    item.meta.showLink = !!!item.meta.isHide;
+    item.meta.rank = item.meta.sort;
+  });
+  return menuList;
+}
 
 /** 使用公共函数，避免`removeEventListener`失效 */
 function onkeypress({ code }: KeyboardEvent) {

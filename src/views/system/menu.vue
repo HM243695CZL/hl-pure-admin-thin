@@ -61,12 +61,12 @@ const {
           <component :is="useRenderIcon(scope.row.icon)"/>
         </template>
       </vxe-column>
-      <vxe-column field="showLink" title="是否显示">
+      <vxe-column field="isHide" title="是否显示">
         <template #default="scope">
-          <el-tag>{{scope.row.showLink ? '显示' : '隐藏'}}</el-tag>
+          <el-tag>{{scope.row.isHide ? '隐藏' : '显示'}}</el-tag>
         </template>
       </vxe-column>
-      <vxe-column field="rank" title="排序" />
+      <vxe-column field="sort" title="排序" />
       <vxe-column title="操作" width="200">
         <template #default="scope">
           <el-button size="small" @click="clickEdit(scope.row.id)">修改</el-button>

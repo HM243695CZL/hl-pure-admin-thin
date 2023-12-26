@@ -33,10 +33,10 @@ export const useUserStore = defineStore({
         getLogin(data)
           .then(data => {
             if (data) {
-              const result = {
+              const result: any = {
                 accessToken: data.data.token,
                 refreshToken: data.data.token,
-                expires: '2023/10/30 00:00:00',
+                expires: new Date().getTime() + 3 * 24 * 60 * 60 * 1000,
                 roles: data.data.userInfo.roles,
                 username: data.data.userInfo.username
               }
